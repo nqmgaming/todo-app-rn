@@ -1,35 +1,56 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { useAuth } from "./auth";
+import { router } from "expo-router";
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
-
-export default function ModalScreen() {
+const modal = () => {
+  const { logOut, isLoggedIn, logIn } = useAuth();
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/modal.tsx" />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+    <View
+      style={{
+        flex: 1,
+        marginTop: 16,
+        alignItems: "center",
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          alignContent: "center",
+          textAlign: "center",
+          marginBottom: 20,
+        }}
+      >
+        {isLoggedIn
+          ? "You are logged in. Click the button below to log out."
+          : "You are not logged in. Click the button below to log in."}
+      </Text>
+      <TouchableOpacity
+        onPress={() => {
+          isLoggedIn ? logOut() : logIn();
+        }}
+        style={{
+          backgroundColor: "blue",
+          padding: 10,
+          borderRadius: 5,
+          alignItems: "center",
+          width: "60%",
+        }}
+      >
+        <Text
+          style={{
+            color: "white",
+            fontWeight: "bold",
+          }}
+        >
+          {isLoggedIn ? "Log out" : "Log in"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+export default modal;
+
+const styles = StyleSheet.create({});
